@@ -1,7 +1,6 @@
 package services
 
 import (
-	"backend/dto"
 	model "backend/models"
 	"backend/utils"
 	"errors"
@@ -24,17 +23,38 @@ func GetUserByUsername(username string) (*model.User, error) {
 }
 
 
-func CreateUser(user dto.UserCreateUpdate) (*model.User, error) {
+func CreateUser(user model.User) (*model.User, error) {
 	hashedPassword,err  := model.HashPassword(user.Password)
 	if err != nil {
 		return nil, err
 	}
 	user.Password = hashedPassword;
-	var User model.User 
-	err = utils.GetDB().Table("users").Create(&User).Error
+	err = utils.GetDB().Table("users").Create(&user).Error
 	if err != nil {
 		return nil,err
 	}
 
-	return &User, nil
+	return &user, nil
 }
+
+func ValidateEmailId(email string ) (bool, error ){
+
+	_,err := GetUserByEmail(email)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return  false,nil 
+		}
+		return false ,err
+	}
+	 
+	return true,nil
+}
+
+func GetUserByEmail(email string) ( *model.User,error) {
+	var user model.User
+	err := utils.GetDB().Where("email = ?", email).First(&user).Error
+	if err != nil {
+		return nil,err
+	}
+	return &user,nil
+} 

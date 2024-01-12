@@ -36,6 +36,7 @@ func main() {
 	private.Get("/all", func(c *fiber.Ctx) error {
 		return c.SendString("hello")
 	})
+	private.Get("/getProfilePic" ,controllers.GetJobFile)
 	go func() {
 		if err := app.Listen(":3001"); err != nil {
 			log.Fatalf("Error starting server: %v", err)

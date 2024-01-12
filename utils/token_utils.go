@@ -63,9 +63,9 @@ func jwtError(c *fiber.Ctx, err error) error {
 
 func JWTFilter(c *fiber.Ctx) error {
 	token := c.Locals("user").(*jwt.Token)
-	userEmail := token.Claims.(jwt.MapClaims)["sub"].(float64)
+	userEmail := token.Claims.(jwt.MapClaims)["sub"].(string)
 	var user model.User
-	err := db.Where("ID = ?", userEmail).First(&user).Error
+	err := db.Where("email = ?", userEmail).First(&user).Error
 	if err != nil {
 		return err
 	}
