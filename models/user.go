@@ -16,7 +16,6 @@ type User struct {
 	Address     Address     `json:"address" gorm:"foreignKey:UserID"`
 	Followers   []Follower  `json:"followers" gorm:"foreignKey:UserID"`
 	Following   []Following `json:"followers" gorm:"foreignKey:UserID"`
-	Posts       []Post      `json:"posts" gorm:"foreignKey:UserID"`
 	Designation string      `json:"designation" gorm:"foreignKey:UserID"`
 	Role        string      `json:"role"`
 	Active      bool        `json:"active"`
@@ -56,6 +55,7 @@ type Post struct {
 	Caption   string `json:"caption"`
 	MediaURL  string `json:"media_url"`
 	CreatedAt string `json:"created_at"`
+	UpdatedAt   string `json:"updatedat`
 	Comments  []Comment
 	Likes     []Like
 }

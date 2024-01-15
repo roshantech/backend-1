@@ -70,8 +70,8 @@ func UpdateUserById(user model.User) (*model.User, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	err = utils.GetDB().Model(&model.Address{}).Where("user_id = ?", user.ID).Updates(&user.Address).Error
+	address := user.Address
+	err = utils.GetDB().Where("user_id = ?", user.ID).Updates(&address).Error
 	if err != nil {
 		return nil, err
 	}

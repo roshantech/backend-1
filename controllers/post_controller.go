@@ -6,8 +6,8 @@ import (
 	"backend/utils"
 	"io"
 	"os"
+	"path/filepath"
 	"strconv"
-	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -31,8 +31,15 @@ func CreatePost(c *fiber.Ctx) error {
 			return c.Status(fiber.StatusInternalServerError).SendString(utils.ERR_OPEN_FILE)
 		}
 		defer uploadedFile.Close()
+		uploadDir := filepath.Join("Files", strconv.Itoa(int(user.ID)))
 
-		deviceFile, err := os.Create("Files/"+strconv.Itoa(int(user.ID))+"/" + file[0].Filename)
+		err = os.MkdirAll(uploadDir, os.ModePerm)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).SendString("Error creating directory")
+		}
+		createfile := filepath.Join(uploadDir+ file[0].Filename)
+
+		deviceFile, err := os.Create(createfile)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).SendString(utils.ERR_CREATE_FILE)
 		}
@@ -48,7 +55,6 @@ func CreatePost(c *fiber.Ctx) error {
 		UserID   :user.ID,
 		Caption   : form.Value["caption"][0],
 		MediaURL  : "Files/"+strconv.Itoa(int(user.ID))+"/" + file[0].Filename,
-		CreatedAt : time.Now().Format("2006-01-02 15:04:05"),
 		Comments : []model.Comment{},
 		Likes     : []model.Like{},
 	}
@@ -58,4 +64,20 @@ func CreatePost(c *fiber.Ctx) error {
 	}
 	
 	return c.Status(fiber.StatusOK).SendString("Successfully Updated User")
+}
+
+
+func GetPosts(c *fiber.Ctx) error {
+	user, ok := c.Locals("user").(model.User)
+	if !ok {
+		return fiber.NewError(fiber.StatusUnauthorized, "User not found")
+	}
+	
+	posts ,err := services.GetPostUsingId(user.ID)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Internal Server Error"})
+	}
+
+
+	return c.JSON(posts)
 }

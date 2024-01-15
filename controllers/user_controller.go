@@ -8,7 +8,6 @@ import (
 	"io"
 	"log"
 	"os"
-	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -98,8 +97,7 @@ func Signup(c *fiber.Ctx) error {
 		Email:      form.Value["email"][0],
 		ProfilePic: "Files/" + form.File["file"][0].Filename,
 		Active:     true,
-		CreatedAt:  time.Now().Format("2006-01-02 15:04:05"),
-		UpdatedAt:  time.Now().Format("2006-01-02 15:04:05"),
+
 	}
 	_, err = services.CreateUser(*user)
 	if err != nil {
