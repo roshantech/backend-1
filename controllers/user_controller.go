@@ -110,3 +110,15 @@ func Signup(c *fiber.Ctx) error {
 
 	return c.SendString("User Created Successfully")
 }
+
+
+func GetLoggedInUser(c *fiber.Ctx) error { 
+
+	user, ok := c.Locals("user").(model.User)
+	if !ok {
+		return fiber.NewError(fiber.StatusUnauthorized, "User not found")
+	}
+
+
+	return c.JSON(user)
+}

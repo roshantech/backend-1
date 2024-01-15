@@ -13,3 +13,13 @@ type UserCreateUpdate struct {
 	ProfilePic string `json:"profilepic`
 	Active     bool   `json:"active`
 }
+
+
+type UserInfo struct {
+	About    string  `json:"About"`
+	Country  string  `json:"Country"`
+	Email    string  `json:"Email"`
+	PhoneNo  string  `json:"PhoneNo"`
+	Company  string  `json:"Company"`
+	School   string  `json:"School"`
+}

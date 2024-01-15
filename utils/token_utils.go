@@ -69,6 +69,12 @@ func JWTFilter(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
+	var address model.Address
+	err = db.Where("user_id = ?", user.ID).First(&address).Error
+	if err != nil {
+		return err
+	}
+	user.Address = address
 	c.Locals("user", user)
 	return c.Next()
 }

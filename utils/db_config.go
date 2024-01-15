@@ -45,7 +45,7 @@ func initDB() {
 		log.Fatal("Failed to connect to the database:", err)
 	}
 
-	err = db.AutoMigrate(&model.User{})
+	err = model.MigrateModels(db)
 	if err != nil {
 		log.Fatal("Failed to perform auto migration:", err)
 	}
