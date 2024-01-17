@@ -37,6 +37,7 @@ func main() {
 	
 	app.Use("/Files", filesystem.New(filesystem.Config{
 		Root: pkger.Dir("/Files"),
+		Browse:true,
 	}))
 	public := app.Group("/core")
 	public.Post("/signup", controllers.Signup)
@@ -44,11 +45,15 @@ func main() {
 	v1 := app.Group("/v1", utils.JWTConfig())
 	private := v1.Group("/core", utils.JWTFilter)
 	private.Get("/getLoggedInUser", controllers.GetLoggedInUser)
+	private.Get("/getUserByID", controllers.GetUserByID)
+
 	private.Get("/getProfilePic", controllers.GetJobFile)
 	private.Post("/updateProfile", controllers.UpdateProfile)
 
 	private.Get("/getPosts", controllers.GetPosts)
 	private.Post("/createPost", controllers.CreatePost)
+	private.Use("/ws", controllers.NotificationWs)
+
 	go func() {
 		if err := app.Listen(":3001"); err != nil {
 			log.Fatalf("Error starting server: %v", err)

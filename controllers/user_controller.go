@@ -96,6 +96,8 @@ func Signup(c *fiber.Ctx) error {
 		Password:   form.Value["password"][0],
 		Email:      form.Value["email"][0],
 		ProfilePic: "Files/" + form.File["file"][0].Filename,
+		Address: model.Address{Country: "india"},
+		About: "Tell About Your Self",
 		Active:     true,
 
 	}
@@ -118,5 +120,17 @@ func GetLoggedInUser(c *fiber.Ctx) error {
 	}
 
 
+	return c.JSON(user)
+}
+
+func GetUserByID(c *fiber.Ctx) error { 
+
+	ID := c.Query("ID")
+
+ 	user,err := services.GetUserByID(ID)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString("User Not Found")
+	}
+	
 	return c.JSON(user)
 }

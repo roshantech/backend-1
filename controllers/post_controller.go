@@ -37,8 +37,8 @@ func CreatePost(c *fiber.Ctx) error {
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).SendString("Error creating directory")
 		}
-		createfile := filepath.Join(uploadDir+ file[0].Filename)
-
+		createfile := filepath.Join(uploadDir, file[0].Filename)
+		
 		deviceFile, err := os.Create(createfile)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).SendString(utils.ERR_CREATE_FILE)
@@ -55,6 +55,7 @@ func CreatePost(c *fiber.Ctx) error {
 		UserID   :user.ID,
 		Caption   : form.Value["caption"][0],
 		MediaURL  : "Files/"+strconv.Itoa(int(user.ID))+"/" + file[0].Filename,
+		MediaType: form.Value["media_type"][0],
 		Comments : []model.Comment{},
 		Likes     : []model.Like{},
 	}

@@ -5,10 +5,12 @@ go 1.21.4
 require gorm.io/driver/sqlite v1.5.4
 
 require (
+	github.com/fasthttp/websocket v1.5.3 // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/gobuffalo/here v0.6.0 // indirect
 	github.com/gofiber/utils v0.0.10 // indirect
 	github.com/gorilla/schema v1.1.0 // indirect
+	github.com/savsgio/gotils v0.0.0-20230208104028-c358bd845dee // indirect
 )
 
 require (
@@ -16,6 +18,7 @@ require (
 	github.com/gofiber/fiber v1.14.6
 	github.com/gofiber/fiber/v2 v2.51.0 // indirect
 	github.com/gofiber/jwt/v3 v3.3.10
+	github.com/gofiber/websocket/v2 v2.2.1
 	github.com/golang-jwt/jwt/v4 v4.5.0
 	github.com/google/uuid v1.4.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect

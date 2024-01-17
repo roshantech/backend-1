@@ -54,6 +54,7 @@ type Post struct {
 	UserID    uint   `json:"user_id"`
 	Caption   string `json:"caption"`
 	MediaURL  string `json:"media_url"`
+	MediaType string `json:"media_type"`
 	CreatedAt string `json:"created_at"`
 	UpdatedAt   string `json:"updatedat`
 	Comments  []Comment
