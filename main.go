@@ -46,12 +46,16 @@ func main() {
 	private := v1.Group("/core", utils.JWTFilter)
 	private.Get("/getLoggedInUser", controllers.GetLoggedInUser)
 	private.Get("/getUserByID", controllers.GetUserByID)
-
+	
+	
 	private.Get("/getProfilePic", controllers.GetJobFile)
 	private.Post("/updateProfile", controllers.UpdateProfile)
-
+	
 	private.Get("/getPosts", controllers.GetPosts)
 	private.Post("/createPost", controllers.CreatePost)
+	private.Post("/createPostComments", controllers.CreatePostComments)
+
+	private.Get("/likePost", controllers.LikePost)
 	private.Use("/ws", controllers.NotificationWs)
 
 	go func() {

@@ -74,11 +74,55 @@ func GetPosts(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusUnauthorized, "User not found")
 	}
 	
-	posts ,err := services.GetPostUsingId(user.ID)
+	posts ,err := services.GetPostUsingUserId(user.ID)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Internal Server Error"})
 	}
 
 
 	return c.JSON(posts)
+}
+
+func LikePost(c *fiber.Ctx) error {
+	user, ok := c.Locals("user").(model.User)
+	if !ok {
+		return fiber.NewError(fiber.StatusUnauthorized, "User not found")
+	}
+	ID := c.Query("ID")
+	num, err := strconv.ParseUint(ID, 10, 64)
+	if err != nil {
+		return fiber.NewError(fiber.StatusInternalServerError, "User not found")
+	}
+
+	// Use the converted uint
+	postID := uint(num)
+	err = services.UpdaatePostLikes(postID,user.ID)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Internal Server Error"})
+	}
+	return c.SendString("Successfully Updated Likes")
+}
+
+func CreatePostComments(c *fiber.Ctx) error {
+	user, ok := c.Locals("user").(model.User)
+	if !ok {
+		return fiber.NewError(fiber.StatusUnauthorized, "User not found")
+	}
+	form, err := c.MultipartForm()
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).SendString(utils.PARSE_FORM)
+	}
+	comment := &model.Comment{
+		UserID: strconv.FormatUint(uint64(user.ID), 10),
+		PostID: form.Value["post_id"][0],
+		Username: user.Username,
+		ProfilePic: user.ProfilePic,
+		Message  : form.Value["message"][0],
+	}
+	
+	err = services.CreatePostComments(*comment)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Internal Server Error"})
+	}
+	return c.SendString("Successfully Updated Likes")
 }

@@ -56,23 +56,37 @@ type Post struct {
 	MediaURL  string `json:"media_url"`
 	MediaType string `json:"media_type"`
 	CreatedAt string `json:"created_at"`
-	UpdatedAt   string `json:"updatedat`
+	UpdatedAt string `json:"updated_at`
 	Comments  []Comment
 	Likes     []Like
 }
 
 type Comment struct {
 	gorm.Model
-	PostID    uint   `json:"post_id"`
-	UserID    uint   `json:"user_id"`
-	Content   string `json:"content"`
+	UserID  string    `json:"user_id"`
+	Username    string      `json:"username"`
+	ProfilePic  string      `json:"profilepic`
+	PostID string `json:"post_id"`
+	Message   string    `json:"message"`
 	CreatedAt string `json:"created_at"`
+	UpdatedAt string `json:"updated_at`
+}
+
+func (Comment) TableName() string {
+	return "comments"
 }
 
 type Like struct {
 	gorm.Model
 	PostID uint `json:"post_id"`
 	UserID uint `json:"user_id"`
+	CreatedAt string `json:"created_at"`
+	UpdatedAt string `json:"updated_at`
+
+}
+
+func (l *Like) TableName() string {
+	return "likes"
 }
 
 func MigrateModels(db *gorm.DB) error {
