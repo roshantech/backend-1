@@ -10,7 +10,7 @@ import (
 
 func GetPostUsingUserId(Id uint) (*[]model.Post, error) {
 	var post []model.Post
-	err := utils.GetDB().Preload("Likes").Preload("Comments").Find(&post).Error
+	err := utils.GetDB().Preload("Likes").Find(&post).Error
 	if err != nil {
 		return nil, err
 	}
@@ -66,4 +66,12 @@ func CreatePostComments(comment model.Comment) error {
 	}
 
 	return nil
+}
+
+func GetComments(postID string) ([]model.Comment,error ){
+	var comments []model.Comment
+	if err := utils.GetDB().Where("post_id = ? ", postID).Find(&comments).Error; err != nil {
+			return []model.Comment{},err
+	}
+	return comments,nil
 }

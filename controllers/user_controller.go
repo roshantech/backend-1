@@ -50,11 +50,9 @@ func Login(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"accessToken":  accessToken,
 		"refreshToken": refreshToken,
-		"user":         user,
+		"user":         &user,
 	})
 }
-
-
 
 func Signup(c *fiber.Ctx) error {
 	form, err := c.MultipartForm()
@@ -96,10 +94,9 @@ func Signup(c *fiber.Ctx) error {
 		Password:   form.Value["password"][0],
 		Email:      form.Value["email"][0],
 		ProfilePic: "Files/" + form.File["file"][0].Filename,
-		Address: model.Address{Country: "india"},
-		About: "Tell About Your Self",
+		Address:    model.Address{Country: "india"},
+		About:      "Tell About Your Self",
 		Active:     true,
-
 	}
 	_, err = services.CreateUser(*user)
 	if err != nil {
@@ -111,26 +108,34 @@ func Signup(c *fiber.Ctx) error {
 	return c.SendString("User Created Successfully")
 }
 
-
-func GetLoggedInUser(c *fiber.Ctx) error { 
+func GetLoggedInUser(c *fiber.Ctx) error {
 
 	user, ok := c.Locals("user").(model.User)
 	if !ok {
 		return fiber.NewError(fiber.StatusUnauthorized, "User not found")
 	}
 
+	return c.JSON(user)
+}
+
+func GetUserByID(c *fiber.Ctx) error {
+
+	ID := c.Query("ID")
+
+	user, err := services.GetUserByID(ID)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString("User Not Found")
+	}
 
 	return c.JSON(user)
 }
 
-func GetUserByID(c *fiber.Ctx) error { 
+func GetAllUsers(c *fiber.Ctx) error {
 
-	ID := c.Query("ID")
-
- 	user,err := services.GetUserByID(ID)
+	user, err := services.GetAllUsers()
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).SendString("User Not Found")
 	}
-	
+
 	return c.JSON(user)
 }

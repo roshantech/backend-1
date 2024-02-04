@@ -14,12 +14,11 @@ type UserCreateUpdate struct {
 	Active     bool   `json:"active`
 }
 
-
 type UserInfo struct {
-	About    string  `json:"About"`
-	Country  string  `json:"Country"`
-	Email    string  `json:"Email"`
-	PhoneNo  string  `json:"PhoneNo"`
-	Company  string  `json:"Company"`
-	School   string  `json:"School"`
+	About   string `json:"About"`
+	Country string `json:"Country"`
+	Email   string `json:"Email"`
+	PhoneNo string `json:"PhoneNo"`
+	Company string `json:"Company"`
+	School  string `json:"School"`
 }

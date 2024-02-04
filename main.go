@@ -34,10 +34,10 @@ func main() {
 			MaxAge:       3600,
 		},
 	))
-	
+
 	app.Use("/Files", filesystem.New(filesystem.Config{
-		Root: pkger.Dir("/Files"),
-		Browse:true,
+		Root:   pkger.Dir("/Files"),
+		Browse: true,
 	}))
 	public := app.Group("/core")
 	public.Post("/signup", controllers.Signup)
@@ -46,17 +46,22 @@ func main() {
 	private := v1.Group("/core", utils.JWTFilter)
 	private.Get("/getLoggedInUser", controllers.GetLoggedInUser)
 	private.Get("/getUserByID", controllers.GetUserByID)
-	
-	
+	private.Get("/getAllUsers", controllers.GetAllUsers)
+
 	private.Get("/getProfilePic", controllers.GetJobFile)
 	private.Post("/updateProfile", controllers.UpdateProfile)
-	
+
 	private.Get("/getPosts", controllers.GetPosts)
 	private.Post("/createPost", controllers.CreatePost)
 	private.Post("/createPostComments", controllers.CreatePostComments)
+	private.Get("/getPostComments", controllers.GetPostComments)
+	private.Get("/getUserFollowers", controllers.GetUserFollowers)
+	private.Get("/addFollowerToUser", controllers.AddFollowerToUser)
+	private.Get("/getAllConversations", controllers.GetAllConversations)
 
 	private.Get("/likePost", controllers.LikePost)
-	private.Use("/ws", controllers.NotificationWs)
+	public.Use("/ws", controllers.NotificationWs)
+	private.Get("/getAllNotifications", controllers.GetAllNotifications)
 
 	go func() {
 		if err := app.Listen(":3001"); err != nil {

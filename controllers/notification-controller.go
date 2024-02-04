@@ -7,8 +7,9 @@ import (
 
 	"backend/dto"
 	model "backend/models"
-	"backend/utils"
 	"backend/services"
+	"backend/utils"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/websocket/v2"
 )
@@ -40,7 +41,21 @@ func NotificationWs(c *fiber.Ctx) error {
 				break
 			}
 			var readAll []int
-			err = json.Unmarshal(P, &readAll)
+			var message model.ChatSendMessage
+
+			err = json.Unmarshal(P, &message)
+			if err != nil {
+				break
+			}
+			messag := &model.ChatMessage{
+				ConversationID: message.ConversationID,
+				Body:           message.Message,
+				ContentType:    message.ContentType,
+				Attachments:    message.Attachments,
+				CreatedAt:      message.CreatedAt.Format("2006-01-02 15:04:05"),
+				SenderID:       message.SenderID,
+			}
+			err = services.SendMessage(messag)
 			if err != nil {
 				break
 			}
@@ -98,7 +113,6 @@ func SendBrodcastNotification(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).SendString("Unable To get UserInfo")
 	}
 
-	
 	return c.SendString("Broadcast Sent Successfully")
 }
 
@@ -109,7 +123,7 @@ func SendNotification(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).SendString("Unable to parse Data")
 	}
 	cNotification := &model.EaNotification{
-		UserID:          notification.UserID,
+		UserID:          uint(notification.UserID),
 		NotifyMsg:       notification.Message,
 		Status:          "Unread",
 		RecordTimestamp: time.Now().Format("2006-01-02 15:04:05"),

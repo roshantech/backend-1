@@ -38,15 +38,19 @@ type Address struct {
 }
 
 type Follower struct {
-	gorm.Model
-	UserID     uint `json:"user_id"`
-	FollowerID uint `json:"follower_id"`
+	ID         uint   `gorm:"primarykey"`
+	UserID     uint   `json:"user_id"`
+	FollowerID uint   `json:"follower_id"`
+	CreatedAt  string `json:"created_at`
+	UpdatedAt  string `json:"updated_at`
 }
 
 type Following struct {
-	gorm.Model
-	UserID     uint `json:"user_id"`
-	FollowerID uint `json:"follower_id"`
+	ID          uint   `gorm:"primarykey"`
+	UserID      uint   `json:"user_id"`
+	FollowingID uint   `json:"follower_id"`
+	CreatedAt   string `json:"created_at`
+	UpdatedAt   string `json:"updated_at`
 }
 
 type Post struct {
@@ -63,13 +67,13 @@ type Post struct {
 
 type Comment struct {
 	gorm.Model
-	UserID  string    `json:"user_id"`
-	Username    string      `json:"username"`
-	ProfilePic  string      `json:"profilepic`
-	PostID string `json:"post_id"`
-	Message   string    `json:"message"`
-	CreatedAt string `json:"created_at"`
-	UpdatedAt string `json:"updated_at`
+	UserID     string `json:"user_id"`
+	Username   string `json:"username"`
+	ProfilePic string `json:"profilepic`
+	PostID     string `json:"post_id"`
+	Message    string `json:"message"`
+	CreatedAt  string `json:"created_at"`
+	UpdatedAt  string `json:"updated_at`
 }
 
 func (Comment) TableName() string {
@@ -78,11 +82,10 @@ func (Comment) TableName() string {
 
 type Like struct {
 	gorm.Model
-	PostID uint `json:"post_id"`
-	UserID uint `json:"user_id"`
+	PostID    uint   `json:"post_id"`
+	UserID    uint   `json:"user_id"`
 	CreatedAt string `json:"created_at"`
 	UpdatedAt string `json:"updated_at`
-
 }
 
 func (l *Like) TableName() string {
@@ -90,7 +93,7 @@ func (l *Like) TableName() string {
 }
 
 func MigrateModels(db *gorm.DB) error {
-	err := db.AutoMigrate(&User{}, &Address{}, &Follower{}, &Post{}, &Comment{}, &Like{})
+	err := db.AutoMigrate(&User{}, &ChatConversation{}, &ChatMessage{}, &ChatAttachment{}, &Address{}, &Follower{}, &Following{}, &Post{}, &Comment{}, &Like{}, &EaNotification{})
 	if err != nil {
 		return err
 	}

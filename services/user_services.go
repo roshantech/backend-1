@@ -10,7 +10,7 @@ import (
 
 func GetUserByUsername(username string) (*model.User, error) {
 	var user model.User
-	err := utils.GetDB().Where("username = ?", username).First(&user).Error
+	err := utils.GetDB().Where("username = ?", username).Preload("Address").Preload("Followers").Preload("Following").First(&user).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.New("User not found")
@@ -49,7 +49,16 @@ func ValidateEmailId(email string) (bool, error) {
 
 func GetUserByEmail(email string) (*model.User, error) {
 	var user model.User
-	err := utils.GetDB().Where("email = ?", email).First(&user).Error
+	err := utils.GetDB().Where("email = ?", email).Preload("Address").Preload("Followers").Preload("Following").First(&user).Error
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
+func GetAllUsers() (*[]model.User, error) {
+	var user []model.User
+	err := utils.GetDB().Preload("Address").Preload("Followers").Preload("Following").Find(&user).Error
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +67,7 @@ func GetUserByEmail(email string) (*model.User, error) {
 
 func GetUserByID(ID string) (*model.User, error) {
 	var user model.User
-	err := utils.GetDB().Where("ID = ?", ID).First(&user).Error
+	err := utils.GetDB().Where("ID = ?", ID).Preload("Address").Preload("Followers").Preload("Following").First(&user).Error
 	if err != nil {
 		return nil, err
 	}
